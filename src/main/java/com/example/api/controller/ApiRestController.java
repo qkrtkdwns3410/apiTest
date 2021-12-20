@@ -2,6 +2,7 @@ package com.example.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.apache.juli.logging.LogConfigurationException;
 import org.hibernate.boot.model.source.internal.hbm.AbstractHbmSourceNode;
 import org.hibernate.hql.internal.ast.tree.BooleanLiteralNode;
 import org.springframework.http.HttpEntity;
@@ -17,10 +18,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
 
@@ -65,37 +65,21 @@ public class ApiRestController {
             LinkedHashMap lm = (LinkedHashMap) resultMap.getBody().get("data");
             ArrayList<Map> bids = (ArrayList<Map>) lm.get("bids");
             ArrayList<Map> asks = (ArrayList<Map>) lm.get("asks");
-            LinkedHashMap mnList = new LinkedHashMap();
 
             log.info("bids = {}", bids);
-            log.info("asks={}", asks);
+            log.info("asks = {}", asks);
+            HashMap<String, Object> bidsList = new HashMap<>();
+            bidsList.put("bids", bids);
+            HashMap<String, Object> asksList = new HashMap<>();
+            asksList.put("asks", asks);
+            bidsList.putAll(asksList);
+            log.info("bidsList = {}", bidsList);
+            log.info("asksList = {}", asksList);
 
-            ArrayList<Object> arr = new ArrayList<>();
+            log.info("bids = {}", bids);
 
-            HashMap<String, Object> quantity = new HashMap<>();
-            HashMap<String, Object> price = new HashMap<>();
-            HashMap<String, Object> bno = new HashMap<>();
-
-            HashMap<String, Object> map = new HashMap<>();
-            HashMap<String, Object> map1 = new HashMap<>();
-            int count_arr = 1;
-
-            for (Map obj : bids) {
-
-                map.put("quantity", obj.get("quantity"));
-                map.put("price", obj.get("price"));
-                map.put("bno", count_arr);
-                log.info("map = {}", map);
-
-                count_arr++;
-                map1.put("data", map);
-
-                log.info("map1 = {}", map1);
-            }
-            mnList.put("bids", map1);
-
-            arr.clear();
-
+            LinkedHashMap mnList = new LinkedHashMap();
+            mnList.put("data", bidsList);
 
 
             //데이터를 제대로 전달 받았는지 체크 String 형태의 파싱
