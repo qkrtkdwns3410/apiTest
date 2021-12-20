@@ -2,14 +2,31 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>비트코인</title>
 </head>
 <body>
-<div class="d-flex justify-content-center">
-<span>BTC</span>
-</div>
+    <div class="d-flex justify-content-center">
+        <span>BTC</span>
+    </div>
+    <div id="test">
+        <h3></h3>
+    </div>
 </body>
+<script crossorigin="anonymous"
+        integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g=="
+        referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url:"/restTest",
+            type: "post",
+            data
+
+        })
+    });
+</script>
+
 </html>
     
     

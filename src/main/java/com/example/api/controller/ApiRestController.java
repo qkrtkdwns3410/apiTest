@@ -2,20 +2,24 @@ package com.example.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.boot.model.source.internal.hbm.AbstractHbmSourceNode;
+import org.hibernate.hql.internal.ast.tree.BooleanLiteralNode;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /*
@@ -36,6 +40,7 @@ public class ApiRestController {
 
             factory.setConnectTimeout(1000); //타임아웃 설정 5초
             factory.setReadTimeout(1000); // 타임아웃 설정 5초
+
             RestTemplate restTemplate = new RestTemplate(factory);
 
             HttpHeaders headers = new HttpHeaders();
@@ -51,25 +56,63 @@ public class ApiRestController {
             // API를 호출하여 MAP타입으로 전달받습니다.
             ResponseEntity<Map> resultMap = restTemplate.exchange(baseUrl.toString(), HttpMethod.GET, entity, Map.class);
 
+
             result.put("statusCode", resultMap.getStatusCodeValue()); // http status code를 확인합니다
             result.put("header", resultMap.getHeaders()); // 헤더 정보 확인
             result.put("body", resultMap.getBody()); // 실제 데이터 정보의 확인
 
+
+            LinkedHashMap lm = (LinkedHashMap) resultMap.getBody().get("data");
+            ArrayList<Map> bids = (ArrayList<Map>) lm.get("bids");
+            ArrayList<Map> asks = (ArrayList<Map>) lm.get("asks");
+            LinkedHashMap mnList = new LinkedHashMap();
+
+            log.info("bids = {}", bids);
+            log.info("asks={}", asks);
+
+            ArrayList<Object> arr = new ArrayList<>();
+
+            HashMap<String, Object> quantity = new HashMap<>();
+            HashMap<String, Object> price = new HashMap<>();
+            HashMap<String, Object> bno = new HashMap<>();
+
+            HashMap<String, Object> map = new HashMap<>();
+            HashMap<String, Object> map1 = new HashMap<>();
+            int count_arr = 1;
+
+            for (Map obj : bids) {
+
+                map.put("quantity", obj.get("quantity"));
+                map.put("price", obj.get("price"));
+                map.put("bno", count_arr);
+                log.info("map = {}", map);
+
+                count_arr++;
+                map1.put("data", map);
+
+                log.info("map1 = {}", map1);
+            }
+            mnList.put("bids", map1);
+
+            arr.clear();
+
+
+
             //데이터를 제대로 전달 받았는지 체크 String 형태의 파싱
             ObjectMapper mapper = new ObjectMapper();
-            jsonInString = mapper.writeValueAsString(resultMap.getBody());
+            jsonInString = mapper.writeValueAsString(mnList);
 
-        }  catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             result.put("statusCode", e.getRawStatusCode());
-            result.put("body"  , e.getStatusText());
-            System.out.println("dfdfdfdf");
+            result.put("body", e.getStatusText());
             System.out.println(e.toString());
 
         } catch (Exception e) {
             result.put("statusCode", "999");
-            result.put("body"  , "excpetion오류");
+            result.put("body", "excpetion오류");
             System.out.println(e.toString());
         }
+        log.info("jsonInString = {}", jsonInString);
 
         return jsonInString;
     }
