@@ -23,12 +23,20 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    // https://mvnrepository.com/artifact/net.sf.json-lib/json-lib
+    implementation group: 'net.sf.json-lib', name: 'json-lib', version: '2.3'
+
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // https://mvnrepository.com/artifact/org.springframework/springloaded
+    implementation group: 'org.springframework', name: 'springloaded', version: '1.2.8.RELEASE'
+
 
 }
 

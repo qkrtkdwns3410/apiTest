@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.juli.logging.LogConfigurationException;
 import org.hibernate.boot.model.source.internal.hbm.AbstractHbmSourceNode;
 import org.hibernate.hql.internal.ast.tree.BooleanLiteralNode;
+import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,6 +14,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -29,6 +31,7 @@ import java.util.stream.Stream;
 @Log4j2
 public class ApiRestController {
     @RequestMapping("/restTest")
+    @ResponseBody
     public String restTest(@RequestParam(defaultValue = "10") Integer count) {
 
 
@@ -97,7 +100,6 @@ public class ApiRestController {
             System.out.println(e.toString());
         }
         log.info("jsonInString = {}", jsonInString);
-
         return jsonInString;
     }
 }

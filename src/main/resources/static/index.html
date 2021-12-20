@@ -6,11 +6,15 @@
     <title>비트코인</title>
 </head>
 <body>
-    <div class="d-flex justify-content-center">
-        <span>BTC</span>
+    <div class="container row" style="float: none; margin:  0 auto">
+        <div class="col-md-3" style="float: none; margin:0 auto;">
+            BTC
+        </div>
     </div>
-    <div id="test">
-        <h3></h3>
+    <hr>
+    <div class="d-flex justify-content-center" id="test">
+        <div id="h1"></div>
+        <div id="h2"></div>
     </div>
 </body>
 <script crossorigin="anonymous"
@@ -19,9 +23,17 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $.ajax({
-            url:"/restTest",
-            type: "post",
-            data
+            url: "/restTest",
+            type: "get",
+            success: function (data) {
+                let a = JSON.parse(data);
+                console.log(a);
+                console.log(a['asks'][1].price);
+
+                // $.each(data, function (key, value) {
+                //     alert(key + ":" + value);
+                // });
+            }
 
         })
     });
